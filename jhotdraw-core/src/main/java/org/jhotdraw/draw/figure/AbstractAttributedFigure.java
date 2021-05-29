@@ -146,6 +146,14 @@ public abstract class AbstractAttributedFigure extends AbstractFigure implements
 
     @Override
     public Rectangle2D.Double getDrawingArea(double factor) {
+        double width = getWidth(factor);
+        width++;
+        Rectangle2D.Double r = getBounds();
+        Geom.grow(r, width, width);
+        return r;
+    }
+
+    private double getWidth(double factor) {
         double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, factor);
         double width = strokeTotalWidth / 2d;
         if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
@@ -153,10 +161,7 @@ public abstract class AbstractAttributedFigure extends AbstractFigure implements
         } else if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
             width += strokeTotalWidth * 2;
         }
-        width++;
-        Rectangle2D.Double r = getBounds();
-        Geom.grow(r, width, width);
-        return r;
+        return width;
     }
 
     /**
