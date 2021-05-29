@@ -111,22 +111,35 @@ public abstract class AbstractFigure
      */
     protected void fireAreaInvalidated(Rectangle2D.Double invalidatedArea) {
         if (listenerList.getListenerCount() > 0) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, invalidatedArea);
-                    }
-                    ((FigureListener) listeners[i + 1]).areaInvalidated(event);
-                }
-            }
+            getAreaInvalidatedEvent(invalidatedArea);
         }
+    }
+
+    private void getAreaInvalidatedEvent(Rectangle2D.Double invalidatedArea) {
+        FigureEvent event = null;
+        // Notify all listeners that have registered interest for
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        getAreaInvalidatedLoop(invalidatedArea, event, listeners);
+    }
+
+    private void getAreaInvalidatedLoop(Rectangle2D.Double invalidatedArea, FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getAreaInvalidated(invalidatedArea, event, listeners, i);
+        }
+    }
+
+    private FigureEvent getAreaInvalidated(Rectangle2D.Double invalidatedArea, FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            if (event == null) {
+                event = new FigureEvent(this, invalidatedArea);
+            }
+            ((FigureListener) listeners[i + 1]).areaInvalidated(event);
+        }
+        return event;
     }
 
     /**
@@ -156,16 +169,23 @@ public abstract class AbstractFigure
             Object[] listeners = listenerList.getListenerList();
             // Process the listeners last to first, notifying
             // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, getBounds());
-                    }
-                    ((FigureListener) listeners[i + 1]).figureRequestRemove(event);
-                }
-            }
+            getFigureRequestRemoveEvent(event, listeners);
         }
+    }
+
+    private void getFigureRequestRemoveEvent(FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getFigureRequestRemove(event, listeners, i);
+        }
+    }
+
+    private FigureEvent getFigureRequestRemove(FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            event = getEvent(event);
+            ((FigureListener) listeners[i + 1]).figureRequestRemove(event);
+        }
+        return event;
     }
 
     /**
@@ -179,16 +199,23 @@ public abstract class AbstractFigure
             Object[] listeners = listenerList.getListenerList();
             // Process the listeners last to first, notifying
             // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, getBounds());
-                    }
-                    ((FigureListener) listeners[i + 1]).figureAdded(event);
-                }
-            }
+            getFigureAddedEvent(event, listeners);
         }
+    }
+
+    private void getFigureAddedEvent(FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getFigureAdded(event, listeners, i);
+        }
+    }
+
+    private FigureEvent getFigureAdded(FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            event = getEvent(event);
+            ((FigureListener) listeners[i + 1]).figureAdded(event);
+        }
+        return event;
     }
 
     /**
@@ -196,22 +223,40 @@ public abstract class AbstractFigure
      */
     protected void fireFigureRemoved() {
         if (listenerList.getListenerCount() > 0) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, getBounds());
-                    }
-                    ((FigureListener) listeners[i + 1]).figureRemoved(event);
-                }
-            }
+            getFigureRemovedEvent();
         }
+    }
+
+    private void getFigureRemovedEvent() {
+        FigureEvent event = null;
+        // Notify all listeners that have registered interest for
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        getFigureRemovedLoop(event, listeners);
+    }
+
+    private void getFigureRemovedLoop(FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getFigureRemoved(event, listeners, i);
+        }
+    }
+
+    private FigureEvent getFigureRemoved(FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            event = getEvent(event);
+            ((FigureListener) listeners[i + 1]).figureRemoved(event);
+        }
+        return event;
+    }
+
+    private FigureEvent getEvent(FigureEvent event) {
+        if (event == null) {
+            event = new FigureEvent(this, getBounds());
+        }
+        return event;
     }
 
     public void fireFigureChanged() {
@@ -223,22 +268,35 @@ public abstract class AbstractFigure
      */
     protected void fireFigureChanged(Rectangle2D.Double changedArea) {
         if (listenerList.getListenerCount() > 0) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, changedArea);
-                    }
-                    ((FigureListener) listeners[i + 1]).figureChanged(event);
-                }
-            }
+            getFigureChangedEvent(changedArea);
         }
+    }
+
+    private void getFigureChangedEvent(Rectangle2D.Double changedArea) {
+        FigureEvent event = null;
+        // Notify all listeners that have registered interest for
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        getFigureChangedLoop(changedArea, event, listeners);
+    }
+
+    private void getFigureChangedLoop(Rectangle2D.Double changedArea, FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getFigureChanged(changedArea, event, listeners, i);
+        }
+    }
+
+    private FigureEvent getFigureChanged(Rectangle2D.Double changedArea, FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            if (event == null) {
+                event = new FigureEvent(this, changedArea);
+            }
+            ((FigureListener) listeners[i + 1]).figureChanged(event);
+        }
+        return event;
     }
 
     protected void fireFigureChanged(FigureEvent event) {
@@ -263,22 +321,35 @@ public abstract class AbstractFigure
     protected <T> void fireAttributeChanged(AttributeKey<T> attribute, T oldValue, T newValue) {
         if (listenerList.getListenerCount() > 0
                 && (oldValue == null || newValue == null || !oldValue.equals(newValue))) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, attribute, oldValue, newValue);
-                    }
-                    ((FigureListener) listeners[i + 1]).attributeChanged(event);
-                }
-            }
+            getAttributeChangedEvent(attribute, oldValue, newValue);
         }
+    }
+
+    private <T> void getAttributeChangedEvent(AttributeKey<T> attribute, T oldValue, T newValue) {
+        FigureEvent event = null;
+        // Notify all listeners that have registered interest for
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        getAttributeChangedLoop(attribute, oldValue, newValue, event, listeners);
+    }
+
+    private <T> void getAttributeChangedLoop(AttributeKey<T> attribute, T oldValue, T newValue, FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getAttributeChanged(attribute, oldValue, newValue, event, listeners, i);
+        }
+    }
+
+    private <T> FigureEvent getAttributeChanged(AttributeKey<T> attribute, T oldValue, T newValue, FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            if (event == null) {
+                event = new FigureEvent(this, attribute, oldValue, newValue);
+            }
+            ((FigureListener) listeners[i + 1]).attributeChanged(event);
+        }
+        return event;
     }
 
     /**
@@ -287,22 +358,35 @@ public abstract class AbstractFigure
     protected void fireFigureHandlesChanged() {
         Rectangle2D.Double changedArea = getDrawingArea();
         if (listenerList.getListenerCount() > 0) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, changedArea);
-                    }
-                    ((FigureListener) listeners[i + 1]).figureHandlesChanged(event);
-                }
-            }
+            getFigureHandlesChangedEvent(changedArea);
         }
+    }
+
+    private void getFigureHandlesChangedEvent(Rectangle2D.Double changedArea) {
+        FigureEvent event = null;
+        // Notify all listeners that have registered interest for
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        getFigureHandlesChangedLoop(changedArea, event, listeners);
+    }
+
+    private void getFigureHandlesChangedLoop(Rectangle2D.Double changedArea, FigureEvent event, Object[] listeners) {
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            event = getFigureHandlesChanged(changedArea, event, listeners, i);
+        }
+    }
+
+    private FigureEvent getFigureHandlesChanged(Rectangle2D.Double changedArea, FigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == FigureListener.class) {
+            // Lazily create the event:
+            if (event == null) {
+                event = new FigureEvent(this, changedArea);
+            }
+            ((FigureListener) listeners[i + 1]).figureHandlesChanged(event);
+        }
+        return event;
     }
 
     /**
