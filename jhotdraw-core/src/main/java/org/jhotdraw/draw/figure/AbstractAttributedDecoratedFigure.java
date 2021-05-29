@@ -76,14 +76,24 @@ public abstract class AbstractAttributedDecoratedFigure
     protected void updateDecoratorBounds() {
         if (decorator != null) {
             Point2D.Double sp = getStartPoint();
-            Point2D.Double ep = getEndPoint();
-            Insets2D.Double decoratorInsets = get(DECORATOR_INSETS);
-            sp.x -= decoratorInsets.left;
-            sp.y -= decoratorInsets.top;
-            ep.x += decoratorInsets.right;
-            ep.y += decoratorInsets.bottom;
+            Point2D.Double ep = getEp(sp);
             decorator.setBounds(sp, ep);
         }
+    }
+
+    private Point2D.Double getEp(Point2D.Double sp) {
+        Point2D.Double ep = getEndPoint();
+        Insets2D.Double decoratorInsets = getDecoratorInsets(sp);
+        ep.x += decoratorInsets.right;
+        ep.y += decoratorInsets.bottom;
+        return ep;
+    }
+
+    private Insets2D.Double getDecoratorInsets(Point2D.Double sp) {
+        Insets2D.Double decoratorInsets = get(DECORATOR_INSETS);
+        sp.x -= decoratorInsets.left;
+        sp.y -= decoratorInsets.top;
+        return decoratorInsets;
     }
 
     @Override
