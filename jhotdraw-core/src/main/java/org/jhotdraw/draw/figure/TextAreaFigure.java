@@ -115,9 +115,7 @@ public class TextAreaFigure extends AbstractAttributedDecoratedFigure implements
                         if (isUnderlined) {
                             as.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
                         }
-                        int tabCount = paragraphs[i].split("\t").length - 1;
-                        Rectangle2D.Double paragraphBounds = drawParagraph(g, as.getIterator(), verticalPos, maxVerticalPos, leftMargin, rightMargin, tabStops, tabCount);
-                        verticalPos = (float) (paragraphBounds.y + paragraphBounds.height);
+                        verticalPos = getVerticalPos(g, leftMargin, rightMargin, verticalPos, maxVerticalPos, tabStops, paragraphs[i], as);
                         if (verticalPos > maxVerticalPos) {
                             break;
                         }
@@ -126,6 +124,13 @@ public class TextAreaFigure extends AbstractAttributedDecoratedFigure implements
                 }
             }
         }
+    }
+
+    private float getVerticalPos(Graphics2D g, float leftMargin, float rightMargin, float verticalPos, float maxVerticalPos, float[] tabStops, String paragraph, AttributedString as) {
+        int tabCount = paragraph.split("\t").length - 1;
+        Rectangle2D.Double paragraphBounds = drawParagraph(g, as.getIterator(), verticalPos, maxVerticalPos, leftMargin, rightMargin, tabStops, tabCount);
+        verticalPos = (float) (paragraphBounds.y + paragraphBounds.height);
+        return verticalPos;
     }
 
     /**
@@ -181,12 +186,7 @@ public class TextAreaFigure extends AbstractAttributedDecoratedFigure implements
             LinkedList<Float> penPositions = new LinkedList<>();
             int first = layouts.size();
             while (!lineComplete && verticalPos <= maxVerticalPos) {
-                float wrappingWidth = rightMargin - horizontalPos;
-                TextLayout layout = null;
-                layout
-                        = measurer.nextLayout(wrappingWidth,
-                                tabLocations[currentTab] + 1,
-                                lineContainsText);
+                TextLayout layout = calcLayout(rightMargin - horizontalPos, tabLocations[currentTab], measurer, lineContainsText);
                 // layout can be null if lineContainsText is true
                 if (layout != null) {
                     layouts.add(layout);
@@ -252,6 +252,16 @@ public class TextAreaFigure extends AbstractAttributedDecoratedFigure implements
             verticalPos += maxDescent;
         }
         return paragraphBounds;
+    }
+
+    private TextLayout calcLayout(float wrappingWidth1, int tabLocation, LineBreakMeasurer measurer, boolean lineContainsText) {
+        float wrappingWidth = wrappingWidth1;
+        TextLayout layout = null;
+        layout
+                = measurer.nextLayout(wrappingWidth,
+                        tabLocation + 1,
+                        lineContainsText);
+        return layout;
     }
 
     @Override
