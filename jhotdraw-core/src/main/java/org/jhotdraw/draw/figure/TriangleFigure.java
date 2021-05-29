@@ -95,32 +95,52 @@ public class TriangleFigure extends AbstractAttributedFigure {
 
     @Override
     protected void drawFill(Graphics2D g) {
+        Shape triangle = getFillGrowth(g);
+        g.fill(triangle);
+    }
+
+    private Shape getFillGrowth(Graphics2D g) {
         double scaleFactor = AttributeKeys.getScaleFactorFromGraphics(g);
         Shape triangle = getBezierPath();
         double grow = AttributeKeys.getPerpendicularFillGrowth(this, scaleFactor);
         if (grow != 0d) {
-            GrowStroke gs = new GrowStroke((float) grow,
-                    (float) (AttributeKeys.getStrokeTotalWidth(this, scaleFactor)
-                    * get(STROKE_MITER_LIMIT))
-            );
-            triangle = gs.createStrokedShape(triangle);
+            triangle = FillGrowth(scaleFactor, triangle, (float) grow);
         }
-        g.fill(triangle);
+        return triangle;
+    }
+
+    private Shape FillGrowth(double scaleFactor, Shape triangle, float grow) {
+        GrowStroke gs = new GrowStroke(grow,
+                (float) (AttributeKeys.getStrokeTotalWidth(this, scaleFactor)
+                * get(STROKE_MITER_LIMIT))
+        );
+        triangle = gs.createStrokedShape(triangle);
+        return triangle;
     }
 
     @Override
     protected void drawStroke(Graphics2D g) {
+        Shape triangle = getDrawGrowth(g);
+        g.draw(triangle);
+    }
+
+    private Shape getDrawGrowth(Graphics2D g) {
         double scaleFactor = AttributeKeys.getScaleFactorFromGraphics(g);
         Shape triangle = getBezierPath();
         double grow = AttributeKeys.getPerpendicularDrawGrowth(this, scaleFactor);
         if (grow != 0d) {
-            GrowStroke gs = new GrowStroke((float) grow,
-                    (float) (AttributeKeys.getStrokeTotalWidth(this, scaleFactor)
-                    * get(STROKE_MITER_LIMIT))
-            );
-            triangle = gs.createStrokedShape(triangle);
+            triangle = DrawGrowth(scaleFactor, triangle, (float) grow);
         }
-        g.draw(triangle);
+        return triangle;
+    }
+
+    private Shape DrawGrowth(double scaleFactor, Shape triangle, float grow) {
+        GrowStroke gs = new GrowStroke(grow,
+                (float) (AttributeKeys.getStrokeTotalWidth(this, scaleFactor)
+                * get(STROKE_MITER_LIMIT))
+        );
+        triangle = gs.createStrokedShape(triangle);
+        return triangle;
     }
 
     @Override
@@ -187,15 +207,7 @@ public class TriangleFigure extends AbstractAttributedFigure {
      */
     @Override
     public boolean contains(Point2D.Double p) {
-        Shape triangle = getBezierPath();
-        double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0);
-        if (grow != 0d) {
-            GrowStroke gs = new GrowStroke((float) grow,
-                    (float) (AttributeKeys.getStrokeTotalWidth(this, 1.0)
-                    * get(STROKE_MITER_LIMIT))
-            );
-            triangle = gs.createStrokedShape(triangle);
-        }
+        Shape triangle = HitGrowth();
         return triangle.contains(p);
     }
 
@@ -239,6 +251,11 @@ public class TriangleFigure extends AbstractAttributedFigure {
     }
 
     public Point2D.Double chop(Point2D.Double p) {
+        Shape triangle = HitGrowth();
+        return Geom.chop(triangle, p);
+    }
+
+    private Shape HitGrowth() {
         Shape triangle = getBezierPath();
         double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0);
         if (grow != 0d) {
@@ -248,7 +265,7 @@ public class TriangleFigure extends AbstractAttributedFigure {
             );
             triangle = gs.createStrokedShape(triangle);
         }
-        return Geom.chop(triangle, p);
+        return triangle;
     }
 
     /**
