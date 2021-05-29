@@ -79,28 +79,38 @@ public class EllipseFigure extends AbstractAttributedFigure {
 
     @Override
     protected void drawFill(Graphics2D g) {
+        Ellipse2D.Double r = getFillGrow(g);
+        if (r.width > 0 && r.height > 0) {
+            g.fill(r);
+        }
+    }
+
+    private Ellipse2D.Double getFillGrow(Graphics2D g) {
         Ellipse2D.Double r = (Ellipse2D.Double) ellipse.clone();
         double grow = AttributeKeys.getPerpendicularFillGrowth(this, AttributeKeys.getScaleFactorFromGraphics(g));
         r.x -= grow;
         r.y -= grow;
         r.width += grow * 2;
         r.height += grow * 2;
-        if (r.width > 0 && r.height > 0) {
-            g.fill(r);
-        }
+        return r;
     }
 
     @Override
     protected void drawStroke(Graphics2D g) {
+        Ellipse2D.Double r = getDrawGrow(g);
+        if (r.width > 0 && r.height > 0) {
+            g.draw(r);
+        }
+    }
+
+    private Ellipse2D.Double getDrawGrow(Graphics2D g) {
         Ellipse2D.Double r = (Ellipse2D.Double) ellipse.clone();
         double grow = AttributeKeys.getPerpendicularDrawGrowth(this, AttributeKeys.getScaleFactorFromGraphics(g));
         r.x -= grow;
         r.y -= grow;
         r.width += grow * 2;
         r.height += grow * 2;
-        if (r.width > 0 && r.height > 0) {
-            g.draw(r);
-        }
+        return r;
     }
 
     /**
