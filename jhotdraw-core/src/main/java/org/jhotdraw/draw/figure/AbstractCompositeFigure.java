@@ -699,15 +699,24 @@ public abstract class AbstractCompositeFigure
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
+        EventAddLoop(f, zIndex, event, listeners);
+    }
+
+    private void EventAddLoop(org.jhotdraw.draw.figure.Figure f, int zIndex, CompositeFigureEvent event, Object[] listeners) {
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == CompositeFigureListener.class) {
-                // Lazily create the event:
-                if (event == null) {
-                    event = new CompositeFigureEvent(this, f, f.getDrawingArea(), zIndex);
-                }
-                ((CompositeFigureListener) listeners[i + 1]).figureAdded(event);
-            }
+            event = getCompositeFigureEventAdd(f, zIndex, event, listeners, i);
         }
+    }
+
+    private CompositeFigureEvent getCompositeFigureEventAdd(org.jhotdraw.draw.figure.Figure f, int zIndex, CompositeFigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == CompositeFigureListener.class) {
+            // Lazily create the event:
+            if (event == null) {
+                event = new CompositeFigureEvent(this, f, f.getDrawingArea(), zIndex);
+            }
+            ((CompositeFigureListener) listeners[i + 1]).figureAdded(event);
+        }
+        return event;
     }
 
     /**
@@ -721,15 +730,24 @@ public abstract class AbstractCompositeFigure
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying
         // those that are interested in this event
+        EventRemoveLoop(f, zIndex, event, listeners);
+    }
+
+    private void EventRemoveLoop(org.jhotdraw.draw.figure.Figure f, int zIndex, CompositeFigureEvent event, Object[] listeners) {
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
-            if (listeners[i] == CompositeFigureListener.class) {
-                // Lazily create the event:
-                if (event == null) {
-                    event = new CompositeFigureEvent(this, f, f.getDrawingArea(), zIndex);
-                }
-                ((CompositeFigureListener) listeners[i + 1]).figureRemoved(event);
-            }
+            event = getCompositeFigureEventRemove(f, zIndex, event, listeners, i);
         }
+    }
+
+    private CompositeFigureEvent getCompositeFigureEventRemove(org.jhotdraw.draw.figure.Figure f, int zIndex, CompositeFigureEvent event, Object[] listeners, int i) {
+        if (listeners[i] == CompositeFigureListener.class) {
+            // Lazily create the event:
+            if (event == null) {
+                event = new CompositeFigureEvent(this, f, f.getDrawingArea(), zIndex);
+            }
+            ((CompositeFigureListener) listeners[i + 1]).figureRemoved(event);
+        }
+        return event;
     }
 
     @Override
