@@ -160,14 +160,19 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
     }
 
     public Rectangle2D.Double getFigureDrawBounds() {
-        double width = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
-        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-            width *= get(STROKE_MITER_LIMIT);
-        }
+        double width = getWidth();
         width++;
         Rectangle2D.Double r = getBounds();
         Geom.grow(r, width, width);
         return r;
+    }
+
+    private double getWidth() {
+        double width = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
+        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
+            width *= get(STROKE_MITER_LIMIT);
+        }
+        return width;
     }
 
     /**
