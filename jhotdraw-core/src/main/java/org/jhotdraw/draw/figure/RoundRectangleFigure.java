@@ -64,6 +64,13 @@ public class RoundRectangleFigure extends AbstractAttributedFigure {
     // DRAWING
     @Override
     protected void drawFill(Graphics2D g) {
+        RoundRectangle2D.Double r = getFillGrowth(g);
+        if (r.width > 0 && r.height > 0) {
+            g.fill(r);
+        }
+    }
+
+    private RoundRectangle2D.Double getFillGrowth(Graphics2D g) {
         RoundRectangle2D.Double r = (RoundRectangle2D.Double) roundrect.clone();
         double grow = AttributeKeys.getPerpendicularFillGrowth(this, AttributeKeys.getScaleFactorFromGraphics(g));
         r.x -= grow;
@@ -72,13 +79,18 @@ public class RoundRectangleFigure extends AbstractAttributedFigure {
         r.height += grow * 2;
         r.arcwidth += grow * 2;
         r.archeight += grow * 2;
-        if (r.width > 0 && r.height > 0) {
-            g.fill(r);
-        }
+        return r;
     }
 
     @Override
     protected void drawStroke(Graphics2D g) {
+        RoundRectangle2D.Double r = getDrawGrowth(g);
+        if (r.width > 0 && r.height > 0) {
+            g.draw(r);
+        }
+    }
+
+    private RoundRectangle2D.Double getDrawGrowth(Graphics2D g) {
         RoundRectangle2D.Double r = (RoundRectangle2D.Double) roundrect.clone();
         double grow = AttributeKeys.getPerpendicularDrawGrowth(this, AttributeKeys.getScaleFactorFromGraphics(g));
         r.x -= grow;
@@ -87,9 +99,7 @@ public class RoundRectangleFigure extends AbstractAttributedFigure {
         r.height += grow * 2;
         r.arcwidth += grow * 2;
         r.archeight += grow * 2;
-        if (r.width > 0 && r.height > 0) {
-            g.draw(r);
-        }
+        return r;
     }
 
     // SHAPE AND BOUNDS
@@ -231,6 +241,10 @@ public class RoundRectangleFigure extends AbstractAttributedFigure {
     @Override
     public void read(DOMInput in) throws IOException {
         super.read(in);
+        getInAttribute(in);
+    }
+
+    private void getInAttribute(DOMInput in) {
         roundrect.arcwidth = in.getAttribute("arcWidth", DEFAULT_ARC);
         roundrect.archeight = in.getAttribute("arcHeight", DEFAULT_ARC);
     }
