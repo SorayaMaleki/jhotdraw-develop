@@ -231,15 +231,20 @@ public abstract class QuadTreeCompositeFigure
     public java.util.List<Figure> findFiguresWithin(Rectangle2D.Double bounds) {
         LinkedList<Figure> contained = new LinkedList<>();
         for (Figure f : children) {
-            Rectangle2D r = f.getBounds();
-            if (f.get(TRANSFORM) != null) {
-                r = f.get(TRANSFORM).createTransformedShape(r).getBounds2D();
-            }
+            Rectangle2D r = getRectangle2D(f);
             if (f.isVisible() && bounds.contains(r)) {
                 contained.add(f);
             }
         }
         return contained;
+    }
+
+    private Rectangle2D getRectangle2D(org.jhotdraw.draw.figure.Figure f) {
+        Rectangle2D r = f.getBounds();
+        if (f.get(TRANSFORM) != null) {
+            r = f.get(TRANSFORM).createTransformedShape(r).getBounds2D();
+        }
+        return r;
     }
 
     @Override
