@@ -7,8 +7,8 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * ProgressIndicator.
@@ -16,11 +16,11 @@ import javax.swing.*;
  * @author Werner Randelshofer
  * @version $Id$
  */
-public class ProgressIndicator extends javax.swing.JPanel {
+public class ProgressIndicator extends JPanel {
+    private ProgressIndicatorProduct progressIndicatorProduct = new ProgressIndicatorProduct();
 
     private static final long serialVersionUID = 1L;
     ProgressMonitor m;
-    private BoundedRangeModel progressModel;
 
     /**
      * Creates new instance.
@@ -47,8 +47,8 @@ public class ProgressIndicator extends javax.swing.JPanel {
             boolean indeterminate) {
         initComponents();
         messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD));
-        progressModel = new DefaultBoundedRangeModel(0, 0, min, max);
-        progressBar.setModel(progressModel);
+        progressIndicatorProduct.setProgressModel(new DefaultBoundedRangeModel(0, 0, min, max));
+        progressBar.setModel(progressIndicatorProduct.getProgressModel());
         setMessage(message);
         setNote(note);
         setIndeterminate(indeterminate);
@@ -83,7 +83,7 @@ public class ProgressIndicator extends javax.swing.JPanel {
 
     public void setProgressModel(BoundedRangeModel m) {
         // BoundedRangeModel oldValue = progressModel;
-        progressModel = m;
+        progressIndicatorProduct.setProgressModel(m);
         progressBar.setModel(m);
     }
 
@@ -94,7 +94,7 @@ public class ProgressIndicator extends javax.swing.JPanel {
      * @see #setMinimum
      */
     public int getMinimum() {
-        return progressModel.getMinimum();
+        return progressIndicatorProduct.getMinimum();
     }
 
     /**
@@ -104,17 +104,17 @@ public class ProgressIndicator extends javax.swing.JPanel {
      * @see #getMinimum
      */
     public void setMinimum(int m) {
-        progressModel.setMinimum(m);
+        progressIndicatorProduct.setMinimum(m);
     }
 
     /**
      * Indicate the progress of the operation being monitored.
      *
      * @param nv an int specifying the current value, between the
-     * maximum and minimum specified for this component
+     *           maximum and minimum specified for this component
      */
     public void setProgress(int nv) {
-        progressModel.setValue(nv);
+        progressIndicatorProduct.setProgress(nv);
     }
 
     /**
@@ -124,7 +124,7 @@ public class ProgressIndicator extends javax.swing.JPanel {
      * @see #setMaximum
      */
     public int getMaximum() {
-        return progressModel.getMaximum();
+        return progressIndicatorProduct.getMaximum();
     }
 
     /**
@@ -134,7 +134,7 @@ public class ProgressIndicator extends javax.swing.JPanel {
      * @see #getMaximum
      */
     public void setMaximum(int m) {
-        progressModel.setMaximum(m);
+        progressIndicatorProduct.setMaximum(m);
     }
 
     public void setIndeterminate(boolean b) {
@@ -153,30 +153,31 @@ public class ProgressIndicator extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-        messageLabel = new javax.swing.JLabel();
-        noteLabel = new javax.swing.JLabel();
-        progressBar = new javax.swing.JProgressBar();
-        setBackground(new java.awt.Color(255, 255, 255));
-        setLayout(new java.awt.GridBagLayout());
-        messageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        GridBagConstraints gridBagConstraints;
+        messageLabel = new JLabel();
+        noteLabel = new JLabel();
+        progressBar = new JProgressBar();
+        setBackground(new Color(255, 255, 255));
+        setLayout(new GridBagLayout());
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         add(messageLabel, gridBagConstraints);
-        noteLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        noteLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new Insets(4, 0, 0, 0);
         add(noteLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
+        gridBagConstraints.insets = new Insets(4, 0, 0, 0);
         add(progressBar, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel messageLabel;
-    private javax.swing.JLabel noteLabel;
-    private javax.swing.JProgressBar progressBar;
+    private JLabel messageLabel;
+    private JLabel noteLabel;
+    private JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
 }
