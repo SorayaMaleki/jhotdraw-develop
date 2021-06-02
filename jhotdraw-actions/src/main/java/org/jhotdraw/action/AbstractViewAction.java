@@ -7,11 +7,13 @@
  */
 package org.jhotdraw.action;
 
-import java.beans.*;
-import javax.swing.*;
 import org.jhotdraw.api.app.Application;
 import org.jhotdraw.api.app.View;
 import org.jhotdraw.beans.WeakPropertyChangeListener;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * This abstract class can be extended to implement an {@code Action} that acts
@@ -28,11 +30,11 @@ import org.jhotdraw.beans.WeakPropertyChangeListener;
  * @version $Id$
  */
 public abstract class AbstractViewAction extends AbstractAction {
+    private AbstractViewActionProduct abstractViewActionProduct = new AbstractViewActionProduct();
 
     private static final long serialVersionUID = 1L;
     private Application app;
     private View view;
-    private String propertyName;
     /**
      * Set this to true if the action may create a new view if none exists.
      */
@@ -58,8 +60,8 @@ public abstract class AbstractViewAction extends AbstractAction {
             String name = evt.getPropertyName();
             if ("enabled".equals(name)) {
                 updateEnabled();
-            } else if ((name == null && propertyName == null) || (name != null && name.equals(propertyName))) {
-                updateView();
+            } else if ((name == null && abstractViewActionProduct.getPropertyName() == null) || (name != null && name.equals(abstractViewActionProduct.getPropertyName()))) {
+                abstractViewActionProduct.updateView();
             }
         }
     };
@@ -92,7 +94,7 @@ public abstract class AbstractViewAction extends AbstractAction {
             }
             firePropertyChange(VIEW_PROPERTY, oldValue, newValue);
             updateEnabled();
-            updateView();
+            abstractViewActionProduct.updateView();
         }
     }
 
@@ -100,17 +102,14 @@ public abstract class AbstractViewAction extends AbstractAction {
      * Sets the property name.
      */
     protected void setPropertyName(String name) {
-        this.propertyName = name;
-        if (name != null) {
-            updateView();
-        }
+        abstractViewActionProduct.setPropertyName(name);
     }
 
     /**
      * Gets the property name.
      */
     protected String getPropertyName() {
-        return propertyName;
+        return abstractViewActionProduct.getPropertyName();
     }
 
     /**
@@ -118,6 +117,7 @@ public abstract class AbstractViewAction extends AbstractAction {
      * the view changed.
      */
     protected void updateView() {
+        abstractViewActionProduct.updateView();
     }
 
     /**
@@ -168,7 +168,7 @@ public abstract class AbstractViewAction extends AbstractAction {
      * the application.
      *
      * @param newValue true to enable the action, false to
-     * disable it
+     *                 disable it
      * @see Action#setEnabled
      */
     @Override
@@ -197,5 +197,11 @@ public abstract class AbstractViewAction extends AbstractAction {
      */
     protected boolean isMayCreateView() {
         return mayCreateView;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        AbstractViewAction clone = (AbstractViewAction) super.clone();
+        clone.abstractViewActionProduct = (AbstractViewActionProduct) this.abstractViewActionProduct.clone();
+        return clone;
     }
 }
