@@ -110,10 +110,7 @@ public class TextFigure extends AbstractAttributedDecoratedFigure
 
     protected TextLayout getTextLayout() {
         if (textLayout == null) {
-            String text = getText();
-            if (text == null || text.length() == 0) {
-                text = " ";
-            }
+            String text = getStringText();
             FontRenderContext frc = getFontRenderContext();
             HashMap<TextAttribute, Object> textAttributes = new HashMap<>();
             textAttributes.put(TextAttribute.FONT, getFont());
@@ -123,6 +120,14 @@ public class TextFigure extends AbstractAttributedDecoratedFigure
             textLayout = new TextLayout(text, textAttributes, frc);
         }
         return textLayout;
+    }
+
+    private String getStringText() {
+        String text = getText();
+        if (text == null || text.length() == 0) {
+            text = " ";
+        }
+        return text;
     }
 
     @Override
