@@ -7,10 +7,12 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import java.awt.event.*;
+import org.jhotdraw.util.ResourceBundleUtil;
+
 import javax.swing.*;
-import javax.swing.event.*;
-import org.jhotdraw.util.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * MessagePanel.
@@ -23,10 +25,10 @@ import org.jhotdraw.util.*;
  * @author Werner Randelshofer
  * @version $Id$
  */
-public class MessagePanel extends javax.swing.JPanel {
+public class MessagePanel extends JPanel {
+    private MessagePanelProduct messagePanelProduct = new MessagePanelProduct();
 
     private static final long serialVersionUID = 1L;
-    private EventListenerList listeners;
     private ResourceBundleUtil labels;
 
     /**
@@ -52,19 +54,11 @@ public class MessagePanel extends javax.swing.JPanel {
     }
 
     public void addActionListener(ActionListener listener) {
-        if (listeners == null) {
-            listeners = new EventListenerList();
-            listeners.add(ActionListener.class, listener);
-        }
+        messagePanelProduct.addActionListener(listener);
     }
 
     public void removeActionListener(ActionListener listener) {
-        if (listeners != null) {
-            listeners.remove(ActionListener.class, listener);
-            if (listeners.getListenerCount() == 0) {
-                listeners = null;
-            }
-        }
+        messagePanelProduct.removeActionListener(listener);
     }
 
     /**
@@ -75,41 +69,37 @@ public class MessagePanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
-        iconLabel = new javax.swing.JLabel();
-        messageLabel = new javax.swing.JLabel();
-        closeButton = new javax.swing.JButton();
-        setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setLayout(new java.awt.GridBagLayout());
-        add(iconLabel, new java.awt.GridBagConstraints());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        GridBagConstraints gridBagConstraints;
+        iconLabel = new JLabel();
+        messageLabel = new JLabel();
+        closeButton = new JButton();
+        setBackground(new Color(255, 255, 255));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setLayout(new GridBagLayout());
+        add(iconLabel, new GridBagConstraints());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 10, 0, 0);
+        gridBagConstraints.insets = new Insets(0, 10, 0, 0);
         add(messageLabel, gridBagConstraints);
         closeButton.setText(labels.getString("messagePanel.close.text")); // NOI18N
         closeButton.setActionCommand("close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closePerformed(evt);
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                messagePanelProduct.closePerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHEAST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        gridBagConstraints.anchor = GridBagConstraints.SOUTHEAST;
+        gridBagConstraints.insets = new Insets(10, 10, 0, 0);
         add(closeButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-    private void closePerformed(java.awt.event.ActionEvent evt) { //GEN-FIRST:event_closePerformed
-        for (ActionListener l : listeners.getListeners(ActionListener.class)) {
-            l.actionPerformed(evt);
-        }
-    }//GEN-LAST:event_closePerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
-    private javax.swing.JLabel iconLabel;
-    private javax.swing.JLabel messageLabel;
+    private JButton closeButton;
+    private JLabel iconLabel;
+    private JLabel messageLabel;
     // End of variables declaration//GEN-END:variables
 }
