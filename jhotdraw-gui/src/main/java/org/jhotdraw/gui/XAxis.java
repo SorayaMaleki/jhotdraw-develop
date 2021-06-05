@@ -10,4 +10,8 @@ public class XAxis extends Axis {
     public float getLayoutAlignmentX() {
         return 0f;
     }
+
+    public float getLayoutAlignmentY() {
+        return 0f;
+    }
 }

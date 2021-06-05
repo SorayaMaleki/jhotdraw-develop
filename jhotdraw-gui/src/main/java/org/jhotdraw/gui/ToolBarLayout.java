@@ -78,13 +78,7 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
 
     @Override
     public float getLayoutAlignmentY(Container target) {
-        switch (getAxis()) {
-            case Y_AXIS:
-                return 0f;
-            case X_AXIS:
-            default:
-                return 0f;
-        }
+        return axis.getLayoutAlignmentY();
     }
 
     @Override

@@ -4,4 +4,6 @@ public abstract class Axis {
     public abstract int getAxis();
 
     public abstract float getLayoutAlignmentX();
+
+    public abstract float getLayoutAlignmentY();
 }
