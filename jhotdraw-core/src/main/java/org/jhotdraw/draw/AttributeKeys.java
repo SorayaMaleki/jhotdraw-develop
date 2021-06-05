@@ -67,6 +67,18 @@ public class AttributeKeys {
      */
     public static final AttributeKey<Boolean> UNCLOSED_PATH_FILLED = new AttributeKey<Boolean>("unclosedPathFilled", Boolean.class, false, false, LABELS);
 
+    private static Placement getPlacementObject(StrokePlacement placement) {
+        switch (placement) {
+            case INSIDE:
+                return new Inside();
+            case OUTSIDE:
+                return new Outside();
+            case CENTER:
+                return new Center();
+        }
+        return null;
+    }
+
     public static enum WindingRule {
         /**
          * If WINDING_RULE is put to this value, an even-odd winding rule is used for determining
@@ -535,23 +547,12 @@ public class AttributeKeys {
      * on an outline of the shape.
      */
     public static double getPerpendicularFillGrowth(Figure f, double factor) {
-        double grow;
+        double grow = 0;
         double strokeWidth = AttributeKeys.getStrokeTotalWidth(f, factor);
         StrokePlacement placement = f.get(STROKE_PLACEMENT);
         switch (f.get(FILL_UNDER_STROKE)) {
             case FULL:
-                switch (placement) {
-                    case INSIDE:
-                        grow = 0f;
-                        break;
-                    case OUTSIDE:
-                        grow = strokeWidth;
-                        break;
-                    case CENTER:
-                    default:
-                        grow = strokeWidth / 2d;
-                        break;
-                }
+                grow = getPlacementObject(placement).getPerpendicularFillGrowth(grow, strokeWidth);
                 break;
             case NONE:
                 switch (placement) {
