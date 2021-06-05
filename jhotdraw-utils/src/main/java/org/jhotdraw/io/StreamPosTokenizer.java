@@ -1117,4 +1117,39 @@ public final class StreamPosTokenizer /*extends StreamTokenizer*/ {
         }
         return "Token[" + ret + "], line " + lineno;
     }
+
+    /**
+     * Retrieves an enhanced coordinate from the specified tokenizer.
+     * An enhanced coordinate can be a double, or a '?' followed by a
+     * formula name, or a '$' followed by an index to a modifier.
+     * @param str
+     */
+    public Object nextEnhancedCoordinate(String str) throws IOException {
+        switch (nextToken()) {
+            case '?':
+                StringBuilder buf = new StringBuilder();
+                buf.append('?');
+                int ch = nextChar();
+                for (; ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9';
+                        ch = nextChar()) {
+                    buf.append((char) ch);
+                }
+                pushCharBack(ch);
+                return buf.toString();
+            case '$':
+                buf = new StringBuilder();
+                buf.append('$');
+                ch = nextChar();
+                for (; ch >= '0' && ch <= '9';
+                        ch = nextChar()) {
+                    buf.append((char) ch);
+                }
+                pushCharBack(ch);
+                return buf.toString();
+            case TT_NUMBER:
+                return nval;
+            default:
+                throw new IOException("coordinate missing at position" + getStartPosition() + " in " + str);
+        }
+    }
 }
