@@ -86,7 +86,7 @@ public class Base64 {
     /**
      * Preferred encoding.
      */
-    private static final String PREFERRED_ENCODING = "UTF-8";
+    public static final String PREFERRED_ENCODING = "UTF-8";
     /**
      * The 64 valid Base64 values.
      */
@@ -206,7 +206,7 @@ public class Base64 {
      * @return the <var>destination</var> array
      * @since 1.3
      */
-    private static byte[] encode3to4(
+    public static byte[] encode3to4(
             byte[] source, int srcOffset, int numSigBytes,
             byte[] destination, int destOffset) {
         //           1         2         3
@@ -416,74 +416,7 @@ public class Base64 {
         int dontBreakLines = (options & DONT_BREAK_LINES);
         int gzip = (options & GZIP);
         // Compress?
-        if (gzip == GZIP) {
-            java.io.ByteArrayOutputStream baos = null;
-            java.util.zip.GZIPOutputStream gzos = null;
-            Base64.OutputStream b64os = null;
-            try {
-                // GZip -> Base64 -> ByteArray
-                baos = new java.io.ByteArrayOutputStream();
-                b64os = new Base64.OutputStream(baos, ENCODE | dontBreakLines);
-                gzos = new java.util.zip.GZIPOutputStream(b64os);
-                gzos.write(source, off, len);
-                gzos.close();
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-                return null;
-            } finally {
-                try {
-                    gzos.close();
-                } catch (Exception e) {
-                    // empty allowed
-                }
-                try {
-                    b64os.close();
-                } catch (Exception e) {
-                    // empty allowed
-                }
-                try {
-                    baos.close();
-                } catch (Exception e) {
-                    // empty allowed
-                }
-            }
-            // Return value according to relevant encoding.
-            try {
-                return new String(baos.toByteArray(), PREFERRED_ENCODING);
-            } catch (java.io.UnsupportedEncodingException uue) {
-                return new String(baos.toByteArray());
-            }
-        } else {
-            // Convert option to boolean in way that code likes it.
-            boolean breakLines = dontBreakLines == 0;
-            int len43 = len * 4 / 3;
-            byte[] outBuff = new byte[(len43) // Main 4:3
-                    + ((len % 3) > 0 ? 4 : 0) // Account for padding
-                    + (breakLines ? (len43 / MAX_LINE_LENGTH) : 0)]; // New lines
-            int d = 0;
-            int e = 0;
-            int len2 = len - 2;
-            int lineLength = 0;
-            for (; d < len2; d += 3, e += 4) {
-                encode3to4(source, d + off, 3, outBuff, e);
-                lineLength += 4;
-                if (breakLines && lineLength == MAX_LINE_LENGTH) {
-                    outBuff[e + 4] = NEW_LINE;
-                    e++;
-                    lineLength = 0;
-                }
-            }   // en dfor: each piece of array
-            if (d < len) {
-                encode3to4(source, d + off, len - d, outBuff, e);
-                e += 4;
-            }
-            // Return value according to relevant encoding.
-            try {
-                return new String(outBuff, 0, e, PREFERRED_ENCODING);
-            } catch (java.io.UnsupportedEncodingException uue) {
-                return new String(outBuff, 0, e);
-            }
-        }
+        return getGzipObject(gzip).encodeBytes(source, off, len, dontBreakLines);
     }
 
     /* ********  D E C O D I N G   M E T H O D S  ******** */
@@ -843,6 +776,14 @@ public class Base64 {
             }
         }
         return encodedData;
+    }
+
+    private static Gzip getGzipObject(int gzip) {
+        switch (gzip) {
+            case GZIP:
+                return new Gzip2();
+        }
+        return null;
     }
 
     /* ********  I N N E R   C L A S S   I N P U T S T R E A M  ******** */
