@@ -1019,8 +1019,8 @@ public class ODGInputFormat implements InputFormat {
                     }
                     // path.setFilled(isFilled);
                     //path.setStroked(isStroked);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.moveTo(x, y);
                     nextCommand = 'L';
                     break;
@@ -1031,8 +1031,8 @@ public class ODGInputFormat implements InputFormat {
                     // multiple coordinate pairs are following, they
                     // are all interpreted as lineto.
 
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.lineTo(x, y);
                     break;
 
@@ -1043,12 +1043,12 @@ public class ODGInputFormat implements InputFormat {
                     // at the beginning of the curve and (x2,y2) as
                     // the control point at the end of the curve.
 
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.curveTo(x1, y1, x2, y2, x, y);
                     break;
 
@@ -1085,12 +1085,12 @@ public class ODGInputFormat implements InputFormat {
                     // Draws a segment of an ellipse. The ellipse is specified
                     // by the center(x, y), the size(w, h) and the start-angle
                     // t0 and end-angle t1.
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
                     path.ellipseTo(x, y, x1, y1, x2, y2);
                     break;
 
@@ -1098,12 +1098,12 @@ public class ODGInputFormat implements InputFormat {
                     // angle-ellipse (x y w h t0 t1) +
                     // The same as the “T” command, except that a implied moveto
                     // to the starting point is done.
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
                     path.moveTo(x1, y1);
                     path.ellipseTo(x, y, x1, y1, x2, y2);
                     break;
@@ -1116,14 +1116,14 @@ public class ODGInputFormat implements InputFormat {
                     // specified by the radial vector of point (x3, y3)
                     // and then counter clockwise to the end-angle
                     // that is specified by point (x4, y4).
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
-                    x3 = nextEnhancedCoordinate(tt, str);
-                    y3 = nextEnhancedCoordinate(tt, str);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
+                    x3 = tt.nextEnhancedCoordinate(str);
+                    y3 = tt.nextEnhancedCoordinate(str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.arcTo(x1, y1, x2, y2, x3, y3, x, y);
                     break;
 
@@ -1131,14 +1131,14 @@ public class ODGInputFormat implements InputFormat {
                     // arc (x1 y1 x2 y2 x3 y3 x y) +
                     // The same as the “A” command, except that a
                     // implied moveto to the starting point is done.
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
-                    x3 = nextEnhancedCoordinate(tt, str);
-                    y3 = nextEnhancedCoordinate(tt, str);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
+                    x3 = tt.nextEnhancedCoordinate(str);
+                    y3 = tt.nextEnhancedCoordinate(str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.moveTo(x1, y1);
                     path.arcTo(x1, y1, x2, y2, x3, y3, x, y);
                     break;
@@ -1146,14 +1146,14 @@ public class ODGInputFormat implements InputFormat {
                     // clockwisearcto (x1 y1 x2 y2 x3 y3 x y) +
                     // The same as the “A” command except, that the arc is drawn
                     // clockwise.
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
-                    x3 = nextEnhancedCoordinate(tt, str);
-                    y3 = nextEnhancedCoordinate(tt, str);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
+                    x3 = tt.nextEnhancedCoordinate(str);
+                    y3 = tt.nextEnhancedCoordinate(str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.clockwiseArcTo(x1, y1, x2, y2, x3, y3, x, y);
                     break;
                 case 'V':
@@ -1161,14 +1161,14 @@ public class ODGInputFormat implements InputFormat {
                     // The same as the “A” command, except that a implied moveto
                     // to the starting point is done and the arc is drawn
                     // clockwise.
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x2 = nextEnhancedCoordinate(tt, str);
-                    y2 = nextEnhancedCoordinate(tt, str);
-                    x3 = nextEnhancedCoordinate(tt, str);
-                    y3 = nextEnhancedCoordinate(tt, str);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x2 = tt.nextEnhancedCoordinate(str);
+                    y2 = tt.nextEnhancedCoordinate(str);
+                    x3 = tt.nextEnhancedCoordinate(str);
+                    y3 = tt.nextEnhancedCoordinate(str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.moveTo(x1, y1);
                     path.clockwiseArcTo(x1, y1, x2, y2, x3, y3, x, y);
                     break;
@@ -1177,8 +1177,8 @@ public class ODGInputFormat implements InputFormat {
                     // Draws a quarter ellipse, whose initial segment is
                     // tangential to the x-axis, is drawn from the
                     // current point to (x, y).
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.quadrantXTo(x, y);
                     break;
                 case 'Y':
@@ -1186,8 +1186,8 @@ public class ODGInputFormat implements InputFormat {
                     // Draws a quarter ellipse, whose initial segment is
                     // tangential to the y-axis, is drawn from the
                     // current point to(x, y).
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.quadrantYTo(x, y);
                     break;
                 case 'Q':
@@ -1195,10 +1195,10 @@ public class ODGInputFormat implements InputFormat {
                     // Draws a quadratic Bézier curve from the current point
                     // to(x, y) using(x1, y1) as the control point. (x, y)
                     // becomes the new current point at the end of the command.
-                    x1 = nextEnhancedCoordinate(tt, str);
-                    y1 = nextEnhancedCoordinate(tt, str);
-                    x = nextEnhancedCoordinate(tt, str);
-                    y = nextEnhancedCoordinate(tt, str);
+                    x1 = tt.nextEnhancedCoordinate(str);
+                    y1 = tt.nextEnhancedCoordinate(str);
+                    x = tt.nextEnhancedCoordinate(str);
+                    y = tt.nextEnhancedCoordinate(str);
                     path.quadTo(x1, y1, x, y);
                     break;
                 default:
@@ -1210,40 +1210,6 @@ public class ODGInputFormat implements InputFormat {
             }
         }
         return path;
-    }
-
-    /**
-     * Retrieves an enhanced coordinate from the specified tokenizer.
-     * An enhanced coordinate can be a double, or a '?' followed by a
-     * formula name, or a '$' followed by an index to a modifier.
-     */
-    private Object nextEnhancedCoordinate(StreamPosTokenizer tt, String str) throws IOException {
-        switch (tt.nextToken()) {
-            case '?': 
-                StringBuilder buf = new StringBuilder();
-                buf.append('?');
-                int ch = tt.nextChar();
-                for (; ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9';
-                        ch = tt.nextChar()) {
-                    buf.append((char) ch);
-                }
-                tt.pushCharBack(ch);
-                return buf.toString();
-            case '$': 
-                buf = new StringBuilder();
-                buf.append('$');
-                ch = tt.nextChar();
-                for (; ch >= '0' && ch <= '9';
-                        ch = tt.nextChar()) {
-                    buf.append((char) ch);
-                }
-                tt.pushCharBack(ch);
-                return buf.toString();
-            case StreamPosTokenizer.TT_NUMBER:
-                return tt.nval;
-            default:
-                throw new IOException("coordinate missing at position" + tt.getStartPosition() + " in " + str);
-        }
     }
 
     private void readCommonDrawingShapeAttributes(Element elem, HashMap<AttributeKey<?>, Object> a) throws IOException {
