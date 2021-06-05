@@ -28,10 +28,7 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
      * Specifies that components should be laid out top to bottom.
      */
     public static final int Y_AXIS = 1;
-    /**
-     * Specifies the axis of the layout.
-     */
-    private int axis;
+    Axis axis = new XAxis();
 
     /**
      * Creates a layout manager that will lay out components along the
@@ -52,7 +49,17 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
      * @exception AWTError if the value of <code>axis</code> is invalid
      */
     public ToolBarLayout(int axis) {
-        this.axis = axis;
+        switch (axis) {
+            case Y_AXIS:
+                this.axis = new YAxis();
+                break;
+            case X_AXIS:
+                this.axis = new XAxis();
+                break;
+            default:
+                this.axis = null;
+                break;
+        }
     }
 
     @Override
@@ -66,18 +73,12 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
 
     @Override
     public float getLayoutAlignmentX(Container target) {
-        switch (axis) {
-            case Y_AXIS:
-                return 0f;
-            case X_AXIS:
-            default:
-                return 0f;
-        }
+        return axis.getLayoutAlignmentX();
     }
 
     @Override
     public float getLayoutAlignmentY(Container target) {
-        switch (axis) {
+        switch (getAxis()) {
             case Y_AXIS:
                 return 0f;
             case X_AXIS:
@@ -102,7 +103,7 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
     public Dimension preferredLayoutSize(Container parent) {
         int w = 0;
         int h = 0;
-        switch (axis) {
+        switch (getAxis()) {
             case Y_AXIS:
                 for (Component c : parent.getComponents()) {
                     Dimension ps = c.getPreferredSize();
@@ -133,9 +134,9 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
         Insets insets = parent.getInsets();
         int w = ps.width - insets.left - insets.right;
         int h = ps.height - insets.top - insets.bottom;
-        int x = insets.left;
-        int y = insets.top;
-        switch (axis) {
+        int x = getAxis();
+        int y = getAxis();
+        switch (getAxis()) {
             case Y_AXIS:
                 for (Component c : parent.getComponents()) {
                     ps = c.getPreferredSize();
@@ -151,5 +152,9 @@ public class ToolBarLayout implements LayoutManager2, Serializable {
                     x += ps.width;
                 }
         }
+    }
+
+    public int getAxis() {
+        return axis.getAxis();
     }
 }
